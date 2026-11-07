@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="pt-BR" translate="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="google" content="notranslate">
+<meta name="theme-color" content="#16202e">
+<title>Ótica Elizama</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2316202e'/%3E%3Ccircle cx='20' cy='34' r='12' fill='none' stroke='white' stroke-width='5'/%3E%3Ccircle cx='44' cy='34' r='12' fill='none' stroke='white' stroke-width='5'/%3E%3C/svg%3E">
+<style>
+:root{--bg:#f2f4f7;--ink:#16202e;--mut:#5b6677;--line:#d9dee6;--acc:#0e6b66;--bad:#b3261e}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:env(safe-area-inset-bottom)}
+header{position:sticky;top:0;z-index:5;background:var(--ink);color:#fff;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;display:flex;align-items:center;gap:8px}
+header h1{font-size:17px;margin:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header button{background:none;border:0;color:#fff;font-size:15px;padding:6px 8px}
+main{padding:14px;max-width:640px;margin:auto}
+button,input,select,textarea{font:inherit}
+input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+label{display:block;font-size:14px;color:var(--mut);margin:10px 0 4px}
+.btn{background:var(--acc);color:#fff;border:0;border-radius:10px;padding:11px 16px;font-weight:600}
+.btn.s{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.btn.d{background:#fff;color:var(--bad);border:1px solid var(--line)}
+.btn.sm{padding:7px 11px;font-size:14px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sp{justify-content:space-between}
+.item{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px;margin:8px 0;color:var(--ink)}
+.item b{display:block}.item span{color:var(--mut);font-size:14px}
+h2{font-size:18px;margin:22px 0 6px}
+.mut{color:var(--mut);font-size:14px}
+.err{color:var(--bad);font-size:14px;min-height:20px;margin:6px 0}
+table.rx{width:100%;border-collapse:collapse;text-align:center;margin:8px 0;font-variant-numeric:tabular-nums}
+.rx th{font-weight:500;color:var(--mut);font-size:13px;padding:4px}
+.rx td{padding:8px 4px;border-top:1px solid var(--line)}
+.rx td:first-child{font-weight:700;text-align:left}
+.imgs{display:flex;gap:8px;overflow-x:auto;padding:6px 0}
+.imgs img{height:96px;border-radius:8px;border:1px solid var(--line)}
+.modal{position:fixed;inset:0;background:rgba(22,32,46,.55);z-index:20;display:flex;align-items:flex-end}
+.sheet{background:var(--bg);width:100%;max-width:640px;margin:auto;max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom))}
+</style>
+</head>
+<body>
+<header><button id="back" hidden>←</button><h1 id="title">Ótica Elizama</h1><button id="out" hidden>Sair</button></header>
+<main id="app"></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=v=>Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const fd=d=>d?d.split('-').reverse().join('/'):'';
+const n=v=>v==null?'–':(v>0?'+':'')+Number(v).toFixed(2);
+const today=()=>new Date().toLocaleDateString('sv');
+const TL=['Monofocal','Bifocal','Multifocal (progressiva)','Ocupacional','Outro'];
+const ST=['Novo','No laboratório','Pronto','Entregue'];
+const FP=['Dinheiro','Pix','Cartão de débito','Cartão de crédito','Outro'];
+const CF=[{k:'nome',l:'Nome'},{k:'telefone',l:'Telefone'},{k:'cpf',l:'CPF'},{k:'data_nascimento',l:'Data de nascimento',t:'date'},{k:'endereco',l:'Endereço'},{k:'observacoes',l:'Observações',t:'textarea'}];
+const EF=[{k:'data',l:'Data do exame',t:'date'},{k:'od_esferico',l:'OD esférico',t:'num'},{k:'od_cilindro',l:'OD cilindro',t:'num'},{k:'od_eixo',l:'OD eixo (0 a 180)',t:'int'},{k:'oe_esferico',l:'OE esférico',t:'num'},{k:'oe_cilindro',l:'OE cilindro',t:'num'},{k:'oe_eixo',l:'OE eixo (0 a 180)',t:'int'},{k:'adicao',l:'Adição',t:'num'},{k:'dp',l:'DP',t:'num'},{k:'exame_escrito',l:'Exame por escrito',t:'textarea'},{k:'observacoes',l:'Observações',t:'textarea'}];
+let sb,D={},lastQ='',view=()=>{};
+const app=$('#app'),title=$('#title'),back=$('#back'),out=$('#out');
+const route=()=>view();
+async function ok(p){const r=await p;if(r.error)throw new Error(r.error.message);return r.data}
+
+function form(t,fs,init,save){
+  const ov=o=>Array.isArray(o)?o[0]:o,ol=o=>Array.isArray(o)?o[1]:o;
+  const m=document.createElement('div');m.className='modal';
+  m.innerHTML=`<form class="sheet"><h2 style="margin-top:0">${E(t)}</h2>${fs.map(f=>`<label>${E(f.l)}</label>`+(f.t=='textarea'?`<textarea name="${f.k}" rows="3"></textarea>`:f.t=='select'?`<select name="${f.k}"><option value=""></option>${f.o.map(o=>`<option value="${E(ov(o))}">${E(ol(o))}</option>`).join('')}</select>`:`<input name="${f.k}" type="${f.t=='date'?'date':'text'}"${f.t=='num'?' inputmode="decimal"':''}${f.t=='int'?' inputmode="numeric"':''}>`)).join('')}<p class="err"></p><div class="row"><button class="btn">Salvar</button><button type="button" class="btn s" id="x">Cancelar</button></div></form>`;
+  document.body.appendChild(m);
+  const el=k=>m.querySelector(`[name="${k}"]`);
+  fs.forEach(f=>{el(f.k).value=init?.[f.k]??''});
+  m.querySelector('#x').onclick=()=>m.remove();
+  m.querySelector('form').onsubmit=async e=>{
+    e.preventDefault();const v={};
+    fs.forEach(f=>{let x=el(f.k).value.trim();
+      if(f.t=='num'){x=parseFloat(x.replace(',','.'));if(isNaN(x))x=null}
+      else if(f.t=='int'){x=parseInt(x,10);if(isNaN(x))x=null}
+      else if(x==='')x=null;
+      v[f.k]=x});
+    try{await save(v);m.remove();route()}catch(er){m.querySelector('.err').textContent=er.message||'Não foi possível salvar.'}
+  };
+}
+
+function setup(){
+  title.textContent='Conectar';back.hidden=out.hidden=true;
+  app.innerHTML=`<form id="f" class="card"><p class="mut">Cole os dados do seu projeto Supabase (Project Settings → API). Eles ficam salvos só neste aparelho.</p><label>Project URL</label><input id="u" placeholder="https://xxxx.supabase.co" autocapitalize="off"><label>Chave pública (anon ou publishable)</label><input id="k" autocapitalize="off"><p class="err"></p><button class="btn">Conectar</button></form>`;
+  $('#f').onsubmit=e=>{e.preventDefault();localStorage.sbu=$('#u').value.trim().replace(/\/+$/,'');localStorage.sbk=$('#k').value.trim();boot()};
+}
+function login(){
+  title.textContent='Entrar';back.hidden=out.hidden=true;
+  app.innerHTML=`<form id="f" class="card"><label>E-mail</label><input id="em" type="email" autocomplete="username"><label>Senha</label><input id="pw" type="password" autocomplete="current-password"><p class="err" id="er"></p><div class="row"><button class="btn">Entrar</button><button type="button" class="btn s" id="rs">Trocar projeto</button></div></form>`;
+  $('#f').onsubmit=async e=>{e.preventDefault();const {error}=await sb.auth.signInWithPassword({email:$('#em').value.trim(),password:$('#pw').value});if(error)$('#er').textContent='E-mail ou senha incorretos.';else start()};
+  $('#rs').onclick=()=>{localStorage.removeItem('sbu');localStorage.removeItem('sbk');setup()};
+}
+async function boot(){
+  const u=localStorage.sbu,k=localStorage.sbk;
+  if(!u||!k)return setup();
+  sb=supabase.createClient(u,k);
+  const {data}=await sb.auth.getSession();
+  data.session?start():login();
+}
+function start(){out.hidden=false;view=()=>listV(lastQ);route()}
+back.onclick=()=>{view=()=>listV(lastQ);route()};
+out.onclick=async()=>{await sb.auth.signOut();login()};
+
+function listV(q){
+  lastQ=q||'';title.textContent='Clientes';back.hidden=true;
+  app.innerHTML=`<div class="row"><input id="q" placeholder="Buscar por nome" value="${E(lastQ)}" style="flex:1"><button class="btn" id="n">Novo</button></div><div id="l"></div>`;
+  $('#n').onclick=()=>editCli();
+  let t;$('#q').oninput=e=>{clearTimeout(t);t=setTimeout(()=>{lastQ=e.target.value;fill(lastQ)},250)};
+  fill(lastQ);
+}
+async function fill(q){
+  const l=$('#l');if(!l)return;
+  try{
+    let r=sb.from('Clientes').select('id,nome,telefone').order('nome').limit(100);
+    if(q)r=r.ilike('nome','%'+q+'%');
+    const d=await ok(r);
+    l.innerHTML=d.length?d.map(c=>`<button class="item" data-id="${c.id}"><b>${E(c.nome||'(sem nome)')}</b><span>${E(c.telefone||'')}</span></button>`).join(''):'<p class="mut">Nenhum cliente encontrado. Toque em Novo para cadastrar.</p>';
+    l.querySelectorAll('.item').forEach(b=>b.onclick=()=>{view=()=>cliV(+b.dataset.id);route()});
+  }catch(e){l.innerHTML='<p class="err">'+E(e.message)+'</p>'}
+}
+function editCli(c){
+  form(c?'Editar cliente':'Novo cliente',CF,c,async v=>{
+    if(!v.nome)throw new Error('Informe o nome.');
+    if(c)await ok(sb.from('Clientes').update(v).eq('id',c.id));
+    else{const d=await ok(sb.from('Clientes').insert(v).select('id').single());view=()=>cliV(d.id)}
+  });
+}
+
+async function cliV(id){
+  back.hidden=false;app.innerHTML='<p class="mut">Carregando…</p>';
+  try{
+    const [c,ex,pe]=await Promise.all([
+      ok(sb.from('Clientes').select('*').eq('id',id).single()),
+      ok(sb.from('exames').select('*,exame_imagens(*)').eq('cliente_id',id).order('data',{ascending:false})),
+      ok(sb.from('pedidos').select('*,pagamentos(*)').eq('cliente_id',id).order('criado_em',{ascending:false}))
+    ]);
+    D={c,ex,pe};title.textContent=c.nome||'Cliente';
+    const su={},paths=ex.flatMap(e=>e.exame_imagens.map(i=>i.arquivo));
+    if(paths.length){const s=await ok(sb.storage.from('exames').createSignedUrls(paths,3600));s.forEach(x=>{if(x.signedUrl)su[x.path]=x.signedUrl})}
+    const rx=e=>`<table class="rx"><tr><th></th><th>Esférico</th><th>Cilindro</th><th>Eixo</th></tr>${['od','oe'].map(o=>`<tr><td>${o.toUpperCase()}</td><td>${n(e[o+'_esferico'])}</td><td>${n(e[o+'_cilindro'])}</td><td>${e[o+'_eixo']==null?'–':e[o+'_eixo']+'°'}</td></tr>`).join('')}</table>`;
+    const exC=e=>`<div class="card"><b>${fd(e.data)||'Exame'}</b>${rx(e)}<div class="mut">Adição ${n(e.adicao)} · DP ${e.dp??'–'}</div>${e.exame_escrito?`<p>${E(e.exame_escrito)}</p>`:''}${e.observacoes?`<p class="mut">${E(e.observacoes)}</p>`:''}<div class="imgs">${e.exame_imagens.map(i=>su[i.arquivo]?`<a href="${su[i.arquivo]}" target="_blank"><img src="${su[i.arquivo]}" alt="Exame"></a>`:'').join('')}</div><div class="row"><button class="btn s sm" data-a="foto" data-i="${e.id}">Adicionar foto</button><button class="btn s sm" data-a="ee" data-i="${e.id}">Editar</button><button class="btn d sm" data-a="de" data-i="${e.id}">Excluir</button></div></div>`;
+    const peC=p=>{const tot=p.pagamentos.reduce((s,x)=>s+Number(x.valor),0),x=ex.find(y=>y.id==p.exame_id);
+      return `<div class="card"><b>${E(p.tipo_lente||'Lente')}${p.lente?' – '+E(p.lente):''}</b><div class="mut">Laboratório: ${E(p.laboratorio||'–')} · ${E(p.status||'')}${x?' · Exame de '+fd(x.data):''}</div>${p.pagamentos.map(g=>`<div class="row sp" style="margin-top:6px"><span>${fd(g.data)} ${E(g.forma||'')}</span><span>${money(g.valor)} <button class="btn d sm" data-a="dpg" data-i="${g.id}">×</button></span></div>`).join('')}<p><b>Total pago: ${money(tot)}</b></p><div class="row"><button class="btn s sm" data-a="npg" data-i="${p.id}">Pagamento</button><button class="btn s sm" data-a="ep" data-i="${p.id}">Editar</button><button class="btn d sm" data-a="dp" data-i="${p.id}">Excluir</button></div></div>`};
+    const info=[['Telefone',c.telefone],['CPF',c.cpf],['Nascimento',fd(c.data_nascimento)],['Endereço',c.endereco],['Observações',c.observacoes]].filter(x=>x[1]).map(x=>`<div><span class="mut">${x[0]}:</span> ${E(x[1])}</div>`).join('');
+    app.innerHTML=`<div class="card">${info||'<span class="mut">Sem dados de contato.</span>'}<div class="row" style="margin-top:10px"><button class="btn s sm" data-a="ec">Editar</button><button class="btn d sm" data-a="dc">Excluir cliente</button></div></div><div class="row sp"><h2>Exames</h2><button class="btn sm" data-a="ne">Novo exame</button></div>${ex.map(exC).join('')||'<p class="mut">Nenhum exame ainda.</p>'}<div class="row sp"><h2>Pedidos e pagamentos</h2><button class="btn sm" data-a="np">Novo pedido</button></div>${pe.map(peC).join('')||'<p class="mut">Nenhum pedido ainda.</p>'}`;
+  }catch(e){app.innerHTML='<p class="err">'+E(e.message)+'</p>'}
+}
+
+const pedForm=p=>form(p?'Editar pedido':'Novo pedido',[{k:'tipo_lente',l:'Tipo de lente',t:'select',o:TL},{k:'lente',l:'Lente (modelo ou marca)'},{k:'laboratorio',l:'Laboratório'},{k:'status',l:'Situação',t:'select',o:ST},{k:'exame_id',l:'Exame',t:'select',o:D.ex.map(x=>[x.id,fd(x.data)||'Exame'])}],p,async v=>{
+  v.exame_id=v.exame_id?+v.exame_id:null;v.status=v.status||'Novo';
+  await ok(p?sb.from('pedidos').update(v).eq('id',p.id):sb.from('pedidos').insert({cliente_id:D.c.id,...v}));
+});
+
+async function shrink(f){
+  try{const b=await createImageBitmap(f),s=Math.min(1,1600/Math.max(b.width,b.height)),c=document.createElement('canvas');
+    c.width=Math.round(b.width*s);c.height=Math.round(b.height*s);c.getContext('2d').drawImage(b,0,0,c.width,c.height);
+    return await new Promise(r=>c.toBlob(r,'image/jpeg',.85))}catch{return f}
+}
+function foto(eid){
+  const f=document.createElement('input');f.type='file';f.accept='image/*';f.multiple=true;
+  f.onchange=async()=>{
+    try{for(const file of f.files){
+      const blob=await shrink(file),p=`${D.c.id}/${eid}/${Date.now()}_${Math.random().toString(36).slice(2,6)}.jpg`;
+      await ok(sb.storage.from('exames').upload(p,blob,{contentType:blob.type||'image/jpeg'}));
+      await ok(sb.from('exame_imagens').insert({exame_id:eid,arquivo:p}));
+    }route()}catch(e){alert('Erro: '+e.message)}
+  };
+  f.click();
+}
+
+app.onclick=async e=>{
+  const b=e.target.closest('[data-a]');if(!b)return;
+  const a=b.dataset.a,i=+b.dataset.i,{c,ex,pe}=D;
+  try{
+    if(a=='ec')editCli(c);
+    else if(a=='dc'){if(confirm('Excluir este cliente e todos os exames, pedidos e pagamentos?')){await ok(sb.from('Clientes').delete().eq('id',c.id));view=()=>listV(lastQ);route()}}
+    else if(a=='ne')form('Novo exame',EF,{data:today()},v=>ok(sb.from('exames').insert({cliente_id:c.id,...v})));
+    else if(a=='ee')form('Editar exame',EF,ex.find(x=>x.id==i),v=>ok(sb.from('exames').update(v).eq('id',i)));
+    else if(a=='de'){if(confirm('Excluir este exame e as fotos dele?')){const ps=ex.find(x=>x.id==i).exame_imagens.map(m=>m.arquivo);if(ps.length)await sb.storage.from('exames').remove(ps);await ok(sb.from('exames').delete().eq('id',i));route()}}
+    else if(a=='foto')foto(i);
+    else if(a=='np')pedForm();
+    else if(a=='ep')pedForm(pe.find(x=>x.id==i));
+    else if(a=='dp'){if(confirm('Excluir este pedido e os pagamentos dele?')){await ok(sb.from('pedidos').delete().eq('id',i));route()}}
+    else if(a=='npg')form('Novo pagamento',[{k:'valor',l:'Valor (R$)',t:'num'},{k:'forma',l:'Forma de pagamento',t:'select',o:FP},{k:'data',l:'Data',t:'date'}],{data:today()},async v=>{if(v.valor==null)throw new Error('Informe o valor.');await ok(sb.from('pagamentos').insert({pedido_id:i,...v}))});
+    else if(a=='dpg'){if(confirm('Excluir este pagamento?')){await ok(sb.from('pagamentos').delete().eq('id',i));route()}}
+  }catch(er){alert('Erro: '+er.message)}
+};
+boot();
+</script>
+</body>
+</html>
