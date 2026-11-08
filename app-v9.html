@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="pt-BR" translate="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="google" content="notranslate">
+<meta name="theme-color" content="#16202e">
+<title>Ótica Elizama</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2316202e'/%3E%3Ccircle cx='20' cy='34' r='12' fill='none' stroke='white' stroke-width='5'/%3E%3Ccircle cx='44' cy='34' r='12' fill='none' stroke='white' stroke-width='5'/%3E%3C/svg%3E">
+<style>
+:root{--bg:#f2f4f7;--ink:#16202e;--mut:#5b6677;--line:#d9dee6;--acc:#0e6b66;--bad:#b3261e}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:env(safe-area-inset-bottom)}
+header{position:sticky;top:0;z-index:5;background:var(--ink);color:#fff;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;display:flex;align-items:center;gap:8px}
+header h1{font-size:17px;margin:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header button{background:none;border:0;color:#fff;font-size:15px;padding:6px 8px}
+main{padding:14px;max-width:640px;margin:auto}
+button,input,select,textarea{font:inherit}
+input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+label{display:block;font-size:14px;color:var(--mut);margin:10px 0 4px}
+.btn{background:var(--acc);color:#fff;border:0;border-radius:10px;padding:11px 16px;font-weight:600}
+.btn.s{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.btn.d{background:#fff;color:var(--bad);border:1px solid var(--line)}
+.btn.sm{padding:7px 11px;font-size:14px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sp{justify-content:space-between}
+.item{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px;margin:8px 0;color:var(--ink)}
+.item b{display:block}.item span{color:var(--mut);font-size:14px}
+h2{font-size:18px;margin:22px 0 6px}
+.mut{color:var(--mut);font-size:14px}
+.err{color:var(--bad);font-size:14px;min-height:20px;margin:6px 0}
+table.rx{width:100%;border-collapse:collapse;text-align:center;margin:8px 0;font-variant-numeric:tabular-nums}
+.rx th{font-weight:500;color:var(--mut);font-size:13px;padding:4px}
+.rx td{padding:8px 4px;border-top:1px solid var(--line)}
+.rx td:first-child{font-weight:700;text-align:left}
+.imgs{display:flex;gap:8px;overflow-x:auto;padding:6px 0}
+.imgs img{height:96px;border-radius:8px;border:1px solid var(--line)}
+.modal{position:fixed;inset:0;background:rgba(22,32,46,.55);z-index:20;display:flex;align-items:flex-end}
+.sheet{background:var(--bg);width:100%;max-width:640px;margin:auto;max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom))}
+
+:root{--acc:#a3185b;--line:#e3b3c9}
+body{background:linear-gradient(#ffeaf3,#f6c3da) fixed;padding-bottom:calc(78px + env(safe-area-inset-bottom))}
+header{background:linear-gradient(90deg,#8c1450,#b21d66)}
+.btn.s{color:#7d1346}
+.hero{display:block;width:100%;height:auto;border-radius:18px}
+.hi{background:linear-gradient(90deg,#8c1450,#b21d66);color:#fff;border-radius:22px;padding:12px 18px;margin:-14px 6px 14px;position:relative}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.tile{background:linear-gradient(#fff0f6,#fbd3e4);border:1px solid #d79bb5;border-radius:18px;padding:12px 4px;text-align:center;color:#7d1346;font-weight:700;font-size:13px;line-height:1.2}
+.tile i{display:block;font-style:normal;font-size:30px;margin-bottom:4px}
+.tile span{display:block;font-weight:400;font-size:11px;color:#8a4a68;margin-top:2px}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:10;background:linear-gradient(90deg,#8c1450,#b21d66);display:flex;justify-content:space-around;padding:8px 0 calc(8px + env(safe-area-inset-bottom))}
+nav button{background:none;border:0;color:#fff;font-size:12px;padding:4px 18px}
+nav button i{display:block;font-style:normal;font-size:22px}
+.thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.thumbs img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px}
+a.btn{text-decoration:none;display:inline-block}
+</style>
+</head>
+<body>
+<header><button id="back" hidden>←</button><h1 id="title">Ótica Elizama</h1><button id="out" hidden>Sair</button></header>
+<main id="app"></main>
+<nav id="nav" hidden><button data-n="h"><i>🏠</i>Início</button><button data-n="s"><i>🎧</i>Suporte</button><button data-n="x"><i>↪</i>Sair</button></nav>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=v=>Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const fd=d=>d?d.split('-').reverse().join('/'):'';
+const n=v=>v==null?'–':(v>0?'+':'')+Number(v).toFixed(2);
+const today=()=>new Date().toLocaleDateString('sv');
+const addM=(d,k)=>{const [y,m,dd]=d.split('-').map(Number),l=new Date(y,m+k,0).getDate(),r=new Date(y,m-1+k,Math.min(dd,l));return r.getFullYear()+'-'+String(r.getMonth()+1).padStart(2,'0')+'-'+String(r.getDate()).padStart(2,'0')};
+const addD=(s,k)=>{const [y,m,d]=s.split('-').map(Number),r=new Date(y,m-1,d+k);return r.getFullYear()+'-'+String(r.getMonth()+1).padStart(2,'0')+'-'+String(r.getDate()).padStart(2,'0')};
+const wa=(tel,msg)=>{let n=(tel||'').replace(/\D/g,'');if(!n)return '';if(n.length<=11)n='55'+n;return 'https://wa.me/'+n+'?text='+encodeURIComponent(msg)};
+const msgP=(nome,g)=>`Olá, ${(nome||'').split(' ')[0]}! Passando para lembrar da parcela ${g.numero}/${g.total} da Ótica Elizama, no valor de ${money(g.valor)}, com vencimento em ${fd(g.vencimento)}. Qualquer dúvida, estou à disposição. 💗`;
+const agenda=(nome,g)=>{const dt=g.vencimento<today()?today():g.vencimento;return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent('Avisar '+(nome||'cliente')+': parcela '+g.numero+'/'+g.total+' de '+money(g.valor))+'&dates='+dt.replace(/-/g,'')+'/'+addD(dt,1).replace(/-/g,'')+'&details='+encodeURIComponent('Vencimento: '+fd(g.vencimento)+' · Forma: '+(g.forma||'-'))};
+const TI=['Lente','Armação','Solda','Mola','Limpa lente','Outro'];
+const dsc=p=>p.descricao||((p.pedido_itens||[]).length?p.pedido_itens.map(i=>i.tipo+(i.descricao?' ('+i.descricao+')':'')).join(', '):[p.tipo_lente,p.lente].filter(Boolean).join(' – '))||'Pedido';
+const TL=['Monofocal','Bifocal','Multifocal (progressiva)','Ocupacional','Outro'];
+const ST=['Novo','No laboratório','Pronto','Entregue'];
+const FP=['Dinheiro','Pix','Cartão de débito','Cartão de crédito','Boleto','Outro'];
+const CF=[{k:'nome',l:'Nome'},{k:'telefone',l:'Telefone'},{k:'cpf',l:'CPF'},{k:'data_nascimento',l:'Data de nascimento',t:'date'},{k:'endereco',l:'Endereço'},{k:'observacoes',l:'Observações',t:'textarea'}];
+const EF=[{k:'data',l:'Data do exame',t:'date'},{k:'od_esferico',l:'OD esférico',t:'num'},{k:'od_cilindro',l:'OD cilindro',t:'num'},{k:'od_eixo',l:'OD eixo (0 a 180)',t:'int'},{k:'oe_esferico',l:'OE esférico',t:'num'},{k:'oe_cilindro',l:'OE cilindro',t:'num'},{k:'oe_eixo',l:'OE eixo (0 a 180)',t:'int'},{k:'adicao',l:'Adição',t:'num'},{k:'dp',l:'DP',t:'num'},{k:'fotos',l:'Foto do exame (pode escolher mais de uma)',t:'file'},{k:'observacoes',l:'Observações',t:'textarea'}];
+let sb,D={},lastQ='',view=()=>{},bk=()=>{};
+const app=$('#app'),title=$('#title'),back=$('#back'),out=$('#out');
+const route=()=>view();
+async function ok(p){const r=await p;if(r.error)throw new Error(r.error.message);return r.data}
+
+function form(t,fs,init,save){
+  const ov=o=>Array.isArray(o)?o[0]:o,ol=o=>Array.isArray(o)?o[1]:o;
+  const m=document.createElement('div');m.className='modal';
+  m.innerHTML=`<form class="sheet"><h2 style="margin-top:0">${E(t)}</h2>${fs.map(f=>`<div class="fld" data-k="${f.k}"><label>${E(f.l)}</label>`+(f.t=='file'?`<input name="${f.k}" type="file" accept="image/*" multiple>`:f.t=='textarea'?`<textarea name="${f.k}" rows="3"></textarea>`:f.t=='select'?`<select name="${f.k}"><option value=""></option>${f.o.map(o=>`<option value="${E(ov(o))}">${E(ol(o))}</option>`).join('')}</select>`:`<input name="${f.k}" type="${f.t=='date'?'date':'text'}"${f.t=='num'?' inputmode="decimal"':''}${f.t=='int'?' inputmode="numeric"':''}>`)+'</div>').join('')}<p class="err"></p><div class="row"><button class="btn">Salvar</button><button type="button" class="btn s" id="x">Cancelar</button></div></form>`;
+  document.body.appendChild(m);
+  const el=k=>m.querySelector(`[name="${k}"]`);
+  fs.forEach(f=>{el(f.k).value=init?.[f.k]??''});
+  m.querySelector('#x').onclick=()=>m.remove();
+  const vis=f=>!f.show||((el(f.show[0]).value==f.show[1])!=!!f.show[2]);
+  const upd=()=>fs.forEach(f=>{m.querySelector(`.fld[data-k="${f.k}"]`).style.display=vis(f)?'':'none'});
+  m.querySelector('form').onchange=upd;upd();
+  m.querySelector('form').onsubmit=async e=>{
+    e.preventDefault();const v={};
+    fs.forEach(f=>{let x=f.t=='file'?[...el(f.k).files]:el(f.k).value.trim();
+      if(f.t=='num'){x=parseFloat(x.replace(',','.'));if(isNaN(x))x=null}
+      else if(f.t=='int'){x=parseInt(x,10);if(isNaN(x))x=null}
+      else if(x==='')x=null;
+      if(!vis(f))x=null;v[f.k]=x});
+    try{await save(v);m.remove();route()}catch(er){m.querySelector('.err').textContent=er.message||'Não foi possível salvar.'}
+  };
+}
+
+function setup(){
+  title.textContent='Conectar';back.hidden=out.hidden=true;
+  app.innerHTML=`<form id="f" class="card"><p class="mut">Cole os dados do seu projeto Supabase (Project Settings → API). Eles ficam salvos só neste aparelho.</p><label>Project URL</label><input id="u" placeholder="https://xxxx.supabase.co" autocapitalize="off"><label>Chave pública (anon ou publishable)</label><input id="k" autocapitalize="off"><p class="err"></p><button class="btn">Conectar</button></form>`;
+  $('#f').onsubmit=e=>{e.preventDefault();localStorage.sbu=$('#u').value.trim().replace(/\/+$/,'');localStorage.sbk=$('#k').value.trim();boot()};
+}
+function login(){
+  title.textContent='Entrar';back.hidden=out.hidden=true;
+  app.innerHTML=`<form id="f" class="card"><label>E-mail</label><input id="em" type="email" autocomplete="username"><label>Senha</label><input id="pw" type="password" autocomplete="current-password"><p class="err" id="er"></p><div class="row"><button class="btn">Entrar</button><button type="button" class="btn s" id="rs">Trocar projeto</button></div></form>`;
+  $('#f').onsubmit=async e=>{e.preventDefault();const {error}=await sb.auth.signInWithPassword({email:$('#em').value.trim(),password:$('#pw').value});if(error)$('#er').textContent=({'Invalid login credentials':'E-mail ou senha incorretos.','Email not confirmed':'E-mail não confirmado no Supabase.'})[error.message]||('Erro: '+error.message+(error.status?' (código '+error.status+')':'')+' | Projeto: '+(localStorage.sbu||'').slice(0,40));else start()};
+  $('#rs').onclick=()=>{localStorage.removeItem('sbu');localStorage.removeItem('sbk');setup()};
+}
+async function boot(){
+  const u=localStorage.sbu,k=localStorage.sbk;
+  if(!u||!k)return setup();
+  sb=supabase.createClient(u,k);
+  const {data}=await sb.auth.getSession();
+  data.session?start():login();
+}
+function start(){out.hidden=true;$('#nav').hidden=false;view=homeV;route()}
+back.onclick=()=>{view=bk;route()};
+out.onclick=async()=>{await sb.auth.signOut();login()};
+
+function listV(q){
+  lastQ=q||'';title.textContent='Clientes';back.hidden=false;bk=homeV;
+  app.innerHTML=`<div class="row"><input id="q" placeholder="Buscar por nome" value="${E(lastQ)}" style="flex:1"><button class="btn" id="n">Novo</button></div><div id="l"></div>`;
+  $('#n').onclick=()=>editCli();
+  let t;$('#q').oninput=e=>{clearTimeout(t);t=setTimeout(()=>{lastQ=e.target.value;fill(lastQ)},250)};
+  fill(lastQ);
+}
+async function fill(q){
+  const l=$('#l');if(!l)return;
+  try{
+    let r=sb.from('Clientes').select('id,nome,telefone').order('nome').limit(100);
+    if(q)r=r.ilike('nome','%'+q+'%');
+    const d=await ok(r);
+    l.innerHTML=d.length?d.map(c=>`<button class="item" data-id="${c.id}"><b>${E(c.nome||'(sem nome)')}</b><span>${E(c.telefone||'')}</span></button>`).join(''):'<p class="mut">Nenhum cliente encontrado. Toque em Novo para cadastrar.</p>';
+    l.querySelectorAll('.item').forEach(b=>b.onclick=()=>{bk=view;view=()=>cliV(+b.dataset.id);route()});
+  }catch(e){l.innerHTML='<p class="err">'+E(e.message)+'</p>'}
+}
+function editCli(c){
+  form(c?'Editar cliente':'Novo cliente',CF,c,async v=>{
+    if(!v.nome)throw new Error('Informe o nome.');
+    if(c)await ok(sb.from('Clientes').update(v).eq('id',c.id));
+    else{const d=await ok(sb.from('Clientes').insert(v).select('id').single());bk=()=>listV(lastQ);view=()=>cliV(d.id)}
+  });
+}
+
+async function cliV(id){
+  back.hidden=false;app.innerHTML='<p class="mut">Carregando…</p>';
+  try{
+    const [c,ex,pe]=await Promise.all([
+      ok(sb.from('Clientes').select('*').eq('id',id).single()),
+      ok(sb.from('exames').select('*,exame_imagens(*)').eq('cliente_id',id).order('data',{ascending:false})),
+      ok(sb.from('pedidos').select('*,pagamentos(*),pedido_itens(*),parcelas(*)').eq('cliente_id',id).order('criado_em',{ascending:false}))
+    ]);
+    D={c,ex,pe};title.textContent=c.nome||'Cliente';
+    const su={},paths=ex.flatMap(e=>e.exame_imagens.map(i=>i.arquivo));
+    if(paths.length){const s=await ok(sb.storage.from('exames').createSignedUrls(paths,3600));s.forEach(x=>{if(x.signedUrl)su[x.path]=x.signedUrl})}
+    const rx=e=>`<table class="rx"><tr><th></th><th>Esférico</th><th>Cilindro</th><th>Eixo</th></tr>${['od','oe'].map(o=>`<tr><td>${o.toUpperCase()}</td><td>${n(e[o+'_esferico'])}</td><td>${n(e[o+'_cilindro'])}</td><td>${e[o+'_eixo']==null?'–':e[o+'_eixo']+'°'}</td></tr>`).join('')}</table>`;
+    const exC=e=>`<div class="card"><b>${fd(e.data)||'Exame'}</b>${rx(e)}<div class="mut">Adição ${n(e.adicao)} · DP ${e.dp??'–'}</div>${e.exame_escrito?`<p>${E(e.exame_escrito)}</p>`:''}${e.observacoes?`<p class="mut">${E(e.observacoes)}</p>`:''}<div class="imgs">${e.exame_imagens.map(i=>su[i.arquivo]?`<a href="${su[i.arquivo]}" target="_blank"><img src="${su[i.arquivo]}" alt="Exame"></a>`:'').join('')}</div><div class="row"><button class="btn s sm" data-a="foto" data-i="${e.id}">Adicionar foto</button><button class="btn s sm" data-a="ee" data-i="${e.id}">Editar</button><button class="btn d sm" data-a="de" data-i="${e.id}">Excluir</button></div></div>`;
+    const prC=g=>{const at=!g.pago&&g.vencimento<today();return `<div class="row sp" style="margin-top:8px"><span>${g.numero}/${g.total} · ${fd(g.vencimento)} · ${money(g.valor)}<br><span class="mut">${E(g.forma||'')} · <b style="color:${g.pago?'#0e6b66':at?'#b3261e':'#5b6677'}">${g.pago?'Pago em '+fd(g.pago_em):at?'Atrasada':'A vencer'}</b></span></span><button class="btn s sm" data-a="${g.pago?'upar':'bpar'}" data-i="${g.id}">${g.pago?'Desfazer':'Dar baixa'}</button></div>`};
+    const ext=g=>g.pago?'':`<div class="row" style="margin-top:6px">${wa(c.telefone,msgP(c.nome,g))?`<a class="btn s sm" target="_blank" href="${wa(c.telefone,msgP(c.nome,g))}">WhatsApp</a>`:''}<a class="btn s sm" target="_blank" href="${agenda(c.nome,g)}">Lembrete na agenda</a></div>`;
+    const prs=p=>{const l=(p.parcelas||[]).slice().sort((a,b)=>a.numero-b.numero);return l.length?`<div class="mut" style="margin-top:12px">Parcelas</div>${l.map(g=>prC(g)+ext(g)).join('')}${l.some(g=>!g.pago)?`<div class="row" style="margin-top:8px"><button class="btn d sm" data-a="dpar" data-i="${p.id}">Excluir parcelas pendentes</button></div>`:''}`:''};
+    const peC=p=>`<div class="card"><b>${E(p.descricao||'Pedido')}</b><div class="mut">Lente: ${E([p.tipo_lente,p.lente].filter(Boolean).join(' – ')||'–')}</div><div class="mut">Laboratório: ${E(p.laboratorio||'–')} · Situação: ${E(p.status||'–')}</div>${p.observacao?`<p class="mut" style="margin:6px 0">${E(p.observacao)}</p>`:''}<div class="row" style="margin-top:8px"><button class="btn s sm" data-a="ep" data-i="${p.id}">Editar</button><button class="btn d sm" data-a="dp" data-i="${p.id}">Excluir</button></div></div>`;
+    const fcP=p=>{const it=p.pedido_itens||[],tv=it.reduce((t,x)=>t+Number(x.valor||0),0),tot=p.pagamentos.reduce((t,x)=>t+Number(x.valor),0),f=tv-tot;
+      return `<div class="card"><b>${E(dsc(p))}</b>${it.map(i=>`<div class="row sp" style="margin-top:8px"><span><b>${E(i.tipo)}</b>${i.descricao?' – '+E(i.descricao):''}</span><span>${i.valor!=null?money(i.valor):''} <button class="btn d sm" data-a="di" data-i="${i.id}">×</button></span></div>`).join('')}<div class="row" style="margin-top:8px"><button class="btn s sm" data-a="ni" data-i="${p.id}">Adicionar item</button><button class="btn s sm" data-a="par" data-i="${p.id}">Parcelar</button></div><p style="margin:10px 0 0"><b>Vendido: ${money(tv)}</b> · Pago: ${money(tot)}${tv>0?` · <b style="color:${f>0?'#b3261e':'#0e6b66'}">${f>0?'Falta '+money(f):'Quitado'}</b>`:''}</p></div>`};
+    const pgs=pe.flatMap(p=>p.pagamentos.map(g=>({...g,ped:p}))).sort((a,b)=>(b.data||'').localeCompare(a.data||''));
+    const pgC=g=>`<div class="card"><div class="row sp"><b>${E(g.forma||'Forma não informada')}</b><b>${money(g.valor)}</b></div><div class="mut">${fd(g.data)}</div><div>${E(dsc(g.ped))}</div><div class="row" style="margin-top:8px"><button class="btn d sm" data-a="dpg" data-i="${g.id}">Excluir</button></div></div>`;
+    const pend=pe.flatMap(p=>(p.parcelas||[]).filter(g=>!g.pago).map(g=>({g,p}))).sort((a,b)=>a.g.vencimento.localeCompare(b.g.vencimento));
+    const pendS=pend.length?`<div class="mut" style="margin-top:14px"><b>Boletos e parcelas a receber</b></div>`+pend.map(x=>`<div class="card"><div class="mut" style="margin-bottom:4px">${E(dsc(x.p))}</div>${prC(x.g)}${ext(x.g)}</div>`).join(''):'';
+    const pgS=`<div class="row sp"><h2>Pagamentos</h2><button class="btn sm" data-a="npg2">Novo pagamento</button></div>`+pe.map(fcP).join('')+(pgs.length?`<div class="card"><span class="mut">Total pago</span> <b>${money(pgs.reduce((t,g)=>t+Number(g.valor),0))}</b></div>`+pgs.map(pgC).join(''):'<p class="mut">Nenhum pagamento ainda.</p>')+pendS;
+    const info=[['Telefone',c.telefone],['CPF',c.cpf],['Nascimento',fd(c.data_nascimento)],['Endereço',c.endereco],['Observações',c.observacoes]].filter(x=>x[1]).map(x=>`<div><span class="mut">${x[0]}:</span> ${E(x[1])}</div>`).join('');
+    app.innerHTML=`<div class="card">${info||'<span class="mut">Sem dados de contato.</span>'}<div class="row" style="margin-top:10px"><button class="btn s sm" data-a="ec">Editar</button><button class="btn d sm" data-a="dc">Excluir cliente</button></div></div><div class="row sp"><h2>Exames</h2><button class="btn sm" data-a="ne">Novo exame</button></div>${ex.map(exC).join('')||'<p class="mut">Nenhum exame ainda.</p>'}<div class="row sp"><h2>Pedidos</h2><button class="btn sm" data-a="np">Novo pedido</button></div>${pe.map(peC).join('')||'<p class="mut">Nenhum pedido ainda.</p>'}${pgS}`;
+  }catch(e){app.innerHTML='<p class="err">'+E(e.message)+'</p>'}
+}
+
+const pedForm=p=>form(p?'Editar pedido':'Novo pedido',[{k:'descricao',l:'Descrição da venda',t:'textarea'},{k:'tipo_lente',l:'Tipo de lente',t:'select',o:TL},{k:'lente',l:'Marca ou modelo'},{k:'laboratorio',l:'Laboratório'},{k:'status',l:'Situação',t:'select',o:ST},{k:'observacao',l:'Observação',t:'textarea'}],p,async v=>{
+  v.status=v.status||'Novo';
+  await ok(p?sb.from('pedidos').update(v).eq('id',p.id):sb.from('pedidos').insert({cliente_id:D.c.id,...v}));
+});
+
+async function shrink(f){
+  try{const b=await createImageBitmap(f),s=Math.min(1,1600/Math.max(b.width,b.height)),c=document.createElement('canvas');
+    c.width=Math.round(b.width*s);c.height=Math.round(b.height*s);c.getContext('2d').drawImage(b,0,0,c.width,c.height);
+    return await new Promise(r=>c.toBlob(r,'image/jpeg',.85))}catch{return f}
+}
+async function subir(cid,eid,fs){
+  try{for(const file of fs||[]){
+    const blob=await shrink(file),p=`${cid}/${eid}/${Date.now()}_${Math.random().toString(36).slice(2,6)}.jpg`;
+    await ok(sb.storage.from('exames').upload(p,blob,{contentType:blob.type||'image/jpeg'}));
+    await ok(sb.from('exame_imagens').insert({exame_id:eid,arquivo:p}));
+  }}catch(e){throw new Error('Exame salvo, mas a foto não foi enviada ('+e.message+'). Cancele e use "Adicionar foto" no exame.')}
+}
+function foto(eid){
+  const f=document.createElement('input');f.type='file';f.accept='image/*';f.multiple=true;
+  f.onchange=async()=>{
+    try{for(const file of f.files){
+      const blob=await shrink(file),p=`${D.c.id}/${eid}/${Date.now()}_${Math.random().toString(36).slice(2,6)}.jpg`;
+      await ok(sb.storage.from('exames').upload(p,blob,{contentType:blob.type||'image/jpeg'}));
+      await ok(sb.from('exame_imagens').insert({exame_id:eid,arquivo:p}));
+    }route()}catch(e){alert('Erro: '+e.message)}
+  };
+  f.click();
+}
+
+app.onclick=async e=>{
+  const b=e.target.closest('[data-a]');if(!b)return;
+  const a=b.dataset.a,i=+b.dataset.i,{c,ex,pe}=D;
+  try{
+    if(a=='ec')editCli(c);
+    else if(a=='dc'){if(confirm('Excluir este cliente e todos os exames, pedidos e pagamentos?')){await ok(sb.from('Clientes').delete().eq('id',c.id));view=()=>listV(lastQ);route()}}
+    else if(a=='ne')form('Novo exame',EF,{data:today()},async v=>{const {fotos,...r}=v;const d=await ok(sb.from('exames').insert({cliente_id:c.id,...r}).select('id').single());await subir(c.id,d.id,fotos)});
+    else if(a=='ee')form('Editar exame',EF,ex.find(x=>x.id==i),async v=>{const {fotos,...r}=v;await ok(sb.from('exames').update(r).eq('id',i));await subir(c.id,i,fotos)});
+    else if(a=='de'){if(confirm('Excluir este exame e as fotos dele?')){const ps=ex.find(x=>x.id==i).exame_imagens.map(m=>m.arquivo);if(ps.length)await sb.storage.from('exames').remove(ps);await ok(sb.from('exames').delete().eq('id',i));route()}}
+    else if(a=='foto')foto(i);
+    else if(a=='np')pedForm();
+    else if(a=='ep')pedForm(pe.find(x=>x.id==i));
+    else if(a=='dp'){if(confirm('Excluir este pedido e os pagamentos dele?')){await ok(sb.from('pedidos').delete().eq('id',i));route()}}
+    else if(a=='npg')form('Novo pagamento',[{k:'valor',l:'Valor (R$)',t:'num'},{k:'forma',l:'Forma de pagamento',t:'select',o:FP},{k:'data',l:'Data',t:'date'}],{data:today()},async v=>{if(v.valor==null)throw new Error('Informe o valor.');await ok(sb.from('pagamentos').insert({pedido_id:i,...v}))});
+    else if(a=='ni')form('Novo item da venda',[{k:'tipo',l:'Item',t:'select',o:TI},{k:'descricao',l:'Descrição (modelo, marca...)'},{k:'valor',l:'Valor (R$)',t:'num'}],null,async v=>{if(!v.tipo)throw new Error('Escolha o item.');await ok(sb.from('pedido_itens').insert({pedido_id:i,...v}))});
+    else if(a=='di'){if(confirm('Excluir este item?')){await ok(sb.from('pedido_itens').delete().eq('id',i));route()}}
+    else if(a=='npg2'){
+      if(!pe.length)alert('Crie um pedido primeiro; depois registre o pagamento.');
+      else form('Novo pagamento',[{k:'pedido_id',l:'Pedido',t:'select',o:pe.map(p=>[p.id,dsc(p).slice(0,60)])},{k:'valor',l:'Valor total (R$)',t:'num'},{k:'forma',l:'Forma de pagamento',t:'select',o:FP},{k:'n',l:'Número de parcelas do boleto',t:'int',show:['forma','Boleto']},{k:'venc',l:'Vencimento da 1ª parcela',t:'date',show:['forma','Boleto']},{k:'data',l:'Data do pagamento',t:'date',show:['forma','Boleto',true]}],{pedido_id:pe[0].id,data:today(),n:1,venc:today()},async v=>{
+        if(!v.pedido_id)throw new Error('Escolha o pedido.');
+        if(v.valor==null)throw new Error('Informe o valor.');
+        if(!v.forma)throw new Error('Escolha a forma de pagamento.');
+        const pid=+v.pedido_id;
+        if(v.forma=='Boleto'){
+          const n=v.n||1;
+          if(n<1||n>60)throw new Error('Informe o número de parcelas (1 a 60).');
+          if(!v.venc)throw new Error('Informe o vencimento da 1ª parcela.');
+          const f=Math.round(v.valor*100),base=Math.floor(f/n),rest=f-base*n,rows=[];
+          for(let k=0;k<n;k++)rows.push({pedido_id:pid,numero:k+1,total:n,valor:(base+(k<rest?1:0))/100,vencimento:addM(v.venc,k),forma:'Boleto'});
+          await ok(sb.from('parcelas').insert(rows));
+        }else await ok(sb.from('pagamentos').insert({pedido_id:pid,valor:v.valor,forma:v.forma,data:v.data}));
+      });
+    }
+    else if(a=='dpg'){if(confirm('Excluir este pagamento?')){const g=pe.flatMap(x=>x.pagamentos).find(x=>x.id==i);if(g?.parcela_id)await ok(sb.from('parcelas').update({pago:false,pago_em:null}).eq('id',g.parcela_id));await ok(sb.from('pagamentos').delete().eq('id',i));route()}}
+    else if(a=='par'){
+      const p=pe.find(x=>x.id==i),tv=(p.pedido_itens||[]).reduce((t,x)=>t+Number(x.valor||0),0),pg=p.pagamentos.reduce((t,x)=>t+Number(x.valor),0),f=Math.round((tv-pg)*100);
+      if((p.parcelas||[]).length)alert('Este pedido já tem parcelas. Exclua as pendentes para gerar de novo.');
+      else if(f<=0)alert('Informe o valor dos itens vendidos (Adicionar item) antes de parcelar.');
+      else form('Parcelar '+money(f/100),[{k:'n',l:'Número de parcelas',t:'int'},{k:'forma',l:'Forma de pagamento',t:'select',o:FP},{k:'venc',l:'Vencimento da 1ª parcela',t:'date'}],{n:3,venc:today()},async v=>{
+        if(!v.n||v.n<1||v.n>60)throw new Error('Informe o número de parcelas (1 a 60).');
+        if(!v.venc)throw new Error('Informe o vencimento da 1ª parcela.');
+        const base=Math.floor(f/v.n),rest=f-base*v.n,rows=[];
+        for(let k=0;k<v.n;k++)rows.push({pedido_id:i,numero:k+1,total:v.n,valor:(base+(k<rest?1:0))/100,vencimento:addM(v.venc,k),forma:v.forma});
+        await ok(sb.from('parcelas').insert(rows));
+      });
+    }
+    else if(a=='bpar'){
+      const g=pe.flatMap(x=>x.parcelas||[]).find(x=>x.id==i);
+      form('Dar baixa na parcela '+g.numero+'/'+g.total,[{k:'forma',l:'Forma de pagamento',t:'select',o:FP},{k:'data',l:'Data do pagamento',t:'date'}],{forma:g.forma,data:today()},async v=>{
+        const d=v.data||today();
+        await ok(sb.from('pagamentos').insert({pedido_id:g.pedido_id,valor:g.valor,forma:v.forma||g.forma,data:d,parcela_id:g.id}));
+        await ok(sb.from('parcelas').update({pago:true,pago_em:d}).eq('id',g.id));
+      });
+    }
+    else if(a=='upar'){if(confirm('Desfazer a baixa desta parcela? O pagamento dela será removido.')){await ok(sb.from('pagamentos').delete().eq('parcela_id',i));await ok(sb.from('parcelas').update({pago:false,pago_em:null}).eq('id',i));route()}}
+    else if(a=='dpar'){if(confirm('Excluir as parcelas pendentes deste pedido?')){await ok(sb.from('parcelas').delete().eq('pedido_id',i).eq('pago',false));route()}}
+  }catch(er){alert('Erro: '+er.message)}
+};
+
+const TILES=[['cli','👥','Clientes','Consultar e cadastrar'],['rec','🧾','Receitas Ópticas','Registrar e consultar'],['ven','🛒','Vendas','Pedidos de lentes'],['fin','👛','Financeiro','Recebimentos'],['par','📅','Parcelas','Acompanhar parcelas'],['ina','⚠️','Inadimplência','Ver clientes em atraso'],['fot','📷','Fotos','Anexos dos exames'],['rel','📊','Relatórios','Em breve'],['cfg','⚙️','Configurações','Em breve']];
+function homeV(){
+  title.textContent='Ótica Elizama';back.hidden=true;
+  app.innerHTML=`<img class="hero" src="logo-elizama.jpg" alt="Ótica Elizama" onerror="this.remove()"><div class="hi"><b>Olá, Elisama Ruama!</b><br><span style="font-size:13px">Bem-vinda ao seu sistema</span></div><div id="av"></div><div class="tiles">${TILES.map(t=>`<button class="tile" data-t="${t[0]}"><i>${t[1]}</i>${t[2]}<span>${t[3]}</span></button>`).join('')}</div>`;
+  aviso();
+}
+async function aviso(){
+  try{const hj=today(),d=await ok(sb.from('parcelas').select('vencimento').eq('pago',false).lte('vencimento',addD(hj,3)));
+    const at=d.filter(g=>g.vencimento<hj).length,h=d.filter(g=>g.vencimento==hj).length,pr=d.length-at-h,el=$('#av');
+    if(el&&d.length)el.innerHTML=`<div class="card" data-t="par" style="border-color:#b3261e;margin:0 0 12px"><b>⏰ Avisar clientes</b><div class="mut">Hoje: ${h} · Atrasadas: ${at} · Próximos 3 dias: ${pr}</div></div>`;
+  }catch(e){}
+}
+const page=t=>{title.textContent=t;back.hidden=false;bk=homeV;app.innerHTML='<p class="mut">Carregando…</p>'};
+const fail=e=>{app.innerHTML='<p class="err">'+E(e.message)+'</p>'};
+const cli=(id,h)=>`<button class="item" data-c="${id}">${h}</button>`;
+function go(t){
+  const V={cli:()=>listV(lastQ),rec:recV,ven:venV,fin:finV,fot:fotV,par:()=>parV(false),ina:()=>parV(true)};
+  view=V[t]||(()=>{page('Em breve');app.innerHTML='<div class="card"><b>Em breve</b><p class="mut">Esta área ainda será criada. Já funcionam: Clientes, Receitas Ópticas, Vendas, Financeiro, Parcelas, Inadimplência e Fotos.</p></div>'});
+  route();
+}
+async function recV(){
+  page('Receitas Ópticas');
+  try{const d=await ok(sb.from('exames').select('*,Clientes(nome)').order('data',{ascending:false}).limit(100));
+    app.innerHTML=d.length?d.map(e=>cli(e.cliente_id,`<b>${E(e.Clientes?.nome||'Cliente')}</b><span>${fd(e.data)} · OD ${n(e.od_esferico)} / ${n(e.od_cilindro)} · OE ${n(e.oe_esferico)} / ${n(e.oe_cilindro)}</span>`)).join(''):'<p class="mut">Nenhuma receita ainda. Abra um cliente para registrar.</p>';
+  }catch(e){fail(e)}
+}
+async function venV(){
+  page('Vendas');
+  try{const d=await ok(sb.from('pedidos').select('*,Clientes(nome),pagamentos(valor),pedido_itens(tipo,descricao,valor)').order('criado_em',{ascending:false}).limit(100));
+    app.innerHTML=d.length?d.map(p=>cli(p.cliente_id,`<b>${E(p.Clientes?.nome||'Cliente')}</b><span>${E([dsc(p),p.laboratorio,p.status].filter(Boolean).join(' · '))}<br>Vendido: ${money(p.pedido_itens.reduce((t,x)=>t+Number(x.valor||0),0))} · Pago: ${money(p.pagamentos.reduce((s,x)=>s+Number(x.valor),0))}</span>`)).join(''):'<p class="mut">Nenhum pedido ainda. Abra um cliente para criar.</p>';
+  }catch(e){fail(e)}
+}
+async function finV(){
+  page('Financeiro');
+  try{const mes=today().slice(0,7);
+    const [d,m]=await Promise.all([ok(sb.from('pagamentos').select('*,pedidos(cliente_id,descricao,tipo_lente,lente,pedido_itens(tipo,descricao),Clientes(nome))').order('data',{ascending:false}).limit(100)),ok(sb.from('pagamentos').select('valor').gte('data',mes+'-01'))]);
+    app.innerHTML=`<div class="card"><span class="mut">Recebido neste mês</span><h2 style="margin:4px 0 0">${money(m.reduce((s,x)=>s+Number(x.valor),0))}</h2></div>`+(d.length?d.map(x=>cli(x.pedidos?.cliente_id,`<b>${E(x.pedidos?.Clientes?.nome||'Cliente')}</b><span>${fd(x.data)} · ${E(x.forma||'')} · ${money(x.valor)}<br>${E(x.pedidos?dsc(x.pedidos):'')}</span>`)).join(''):'<p class="mut">Nenhum pagamento ainda.</p>');
+  }catch(e){fail(e)}
+}
+async function parV(atraso){
+  page(atraso?'Inadimplência':'Parcelas');
+  try{let q=sb.from('parcelas').select('*,pedidos(cliente_id,Clientes(nome,telefone))').eq('pago',false).order('vencimento').limit(300);
+    if(atraso)q=q.lt('vencimento',today());
+    const d=await ok(q),hj=today(),at=d.filter(g=>g.vencimento<hj),sum=l=>l.reduce((t,g)=>t+Number(g.valor),0),dias=v=>Math.round((new Date(hj)-new Date(v))/864e5);
+    app.innerHTML=`<div class="card"><span class="mut">${atraso?'Total em atraso':'A receber'}</span><h2 style="margin:4px 0 0">${money(sum(d))}</h2>${atraso?`<span class="mut">${new Set(d.map(g=>g.pedidos?.cliente_id)).size} cliente(s)</span>`:`<span class="mut" style="color:#b3261e">Em atraso: ${money(sum(at))}</span>`}</div>`+(d.length?d.map(g=>{const c=g.pedidos?.Clientes||{},w=wa(c.telefone,msgP(c.nome,g));return `<div class="card"><button class="item" data-c="${g.pedidos?.cliente_id}" style="margin:0 0 8px;border:0;padding:0;background:none"><b>${E(c.nome||'Cliente')}</b><span>${g.numero}/${g.total} · venc. ${fd(g.vencimento)} · ${money(g.valor)} · ${E(g.forma||'')}<br><b style="color:${g.vencimento<hj?'#b3261e':'#5b6677'}">${g.vencimento<hj?'Atrasada há '+dias(g.vencimento)+' dia(s)':'A vencer'}</b></span></button><div class="row">${w?`<a class="btn s sm" target="_blank" href="${w}">WhatsApp</a>`:''}<a class="btn s sm" target="_blank" href="${agenda(c.nome,g)}">Lembrete na agenda</a></div></div>`}).join(''):`<p class="mut">${atraso?'Nenhuma parcela em atraso.':'Nenhuma parcela pendente.'}</p>`);
+  }catch(e){fail(e)}
+}
+async function fotV(){
+  page('Fotos');
+  try{const d=await ok(sb.from('exame_imagens').select('arquivo').order('id',{ascending:false}).limit(60));
+    if(!d.length){app.innerHTML='<p class="mut">Nenhuma foto ainda. Adicione fotos dentro de um exame.</p>';return}
+    const s=await ok(sb.storage.from('exames').createSignedUrls(d.map(x=>x.arquivo),3600)),u=s.filter(x=>x.signedUrl);
+    app.innerHTML='<div class="thumbs">'+u.map(x=>`<a href="${x.signedUrl}" target="_blank"><img src="${x.signedUrl}" alt="Foto"></a>`).join('')+'</div>';
+  }catch(e){fail(e)}
+}
+app.addEventListener('click',e=>{
+  const t=e.target.closest('[data-t]');if(t)return go(t.dataset.t);
+  const c=e.target.closest('[data-c]');if(c&&c.dataset.c!=='undefined'){bk=view;view=()=>cliV(+c.dataset.c);route()}
+});
+$('#nav').onclick=async e=>{
+  const b=e.target.closest('button');if(!b)return;const a=b.dataset.n;
+  if(a=='h'){view=homeV;route()}
+  else if(a=='s')alert('Suporte: em breve.');
+  else{await sb.auth.signOut();$('#nav').hidden=true;login()}
+};
+boot();
+</script>
+</body>
+</html>
